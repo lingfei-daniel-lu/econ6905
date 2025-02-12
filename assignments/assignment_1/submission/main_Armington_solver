@@ -1,0 +1,23 @@
+# Load necessary libraries (if needed)
+using LinearAlgebra
+
+# Define the number of countries
+N = 3
+
+# Example values for productivity, labor endowment, and trade costs
+A = [1.0, 0.8, 1.2]  # Productivities of the 3 countries
+L = [100.0, 150.0, 80.0]  # Labor endowments of the 3 countries
+
+# Define iceberg trade cost matrix tau (self-trade τ_ii = 1, others >1)
+tau = [1.0  1.2  1.1;
+       1.2  1.0  1.3;
+       1.1  1.3  1.0]
+
+# Define elasticity of substitution (must be > 1)
+sigma = 4.0
+
+# Solve for equilibrium wages
+wages = Armington_solver(A, L, tau, sigma)
+
+# Print the result
+println("Equilibrium Wages: ", wages)

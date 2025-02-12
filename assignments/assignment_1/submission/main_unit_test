@@ -1,0 +1,10 @@
+# Example input data
+A = [1.0, 0.9, 1.1]  # Productivities of 3 countries
+L = [100.0, 110.0, 90.0]  # Labor endowments of 3 countries
+σ = 4.0  # Elasticity of substitution
+
+# Call the unit test function to check the solver's output
+result = free_trade_unit_test(A, L, sigma)
+
+# Print the result (true if the solver's output matches the closed-form solution)
+println("Unit test passed: ", result)

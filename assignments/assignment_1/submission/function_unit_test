@@ -1,0 +1,38 @@
+using Test
+
+"""
+    free_trade_unit_test(A, L, sigma)
+
+Unit test for the free-trade equilibrium solver. Given vectors A (productivity) 
+and L (labor) and the elasticity of substitution sigma, this function computes the
+closed-form solution for the free-trade equilibrium wages and compares it to the 
+output of the Armington_solver function. The function returns `true` if the
+results match up to machine precision, and `false` otherwise.
+"""
+function free_trade_unit_test(A::Array{Float64,1}, L::Array{Float64,1}, sigma::Float64)
+    # Set up a tau matrix with all values equal to 1 (free-trade case)
+    N = length(A)
+    tau = ones(N, N)  # All trade costs are 1 (free trade)
+
+    # Solve for equilibrium wages using the Armington_solver
+    computed_wages = Armington_solver(A, L, tau, sigma)
+    
+    # Compute the closed-form solution for the free-trade equilibrium wages
+    # Step 1: Compute the constant K
+    sum_term = sum((A .* L).^(1 - 1/sigma))
+    K = sum_term^(1 / (sigma - 1))
+    
+    # Step 2: Compute the closed-form equilibrium wages
+    closed_wages = K .* (A.^(1 - 1/sigma)) .* (L.^(-1/sigma))
+    
+    # Normalize wages (we normalize country 1's wage to 1 for comparison)
+    computed_wages .= computed_wages / computed_wages[1]
+    closed_wages .= closed_wages / closed_wages[1]
+    
+    # Print both computed and closed-form wages for debugging
+    println("Computed Wages: ", computed_wages)
+    println("Closed-form Wages: ", closed_wages)
+    
+    # Check if the computed wages are approximately equal to the closed-form wages
+    return isapprox(computed_wages, closed_wages, atol=1e-6)
+end
